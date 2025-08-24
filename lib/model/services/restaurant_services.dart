@@ -1,17 +1,16 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:restaurant_flutter/model/restaurant.dart';
-import 'package:restaurant_flutter/model/services/http_services.dart';
+import 'package:restaurant_flutter/type/network_client.dart';
 
 class RestaurantServices {
-  final HttpServices httpServices;
+  final INetworkClient client;
 
-  RestaurantServices({required this.httpServices});
+  RestaurantServices({required this.client});
 
   Future<RestaurantListResponse> getListRestaurants() async {
     try {
-      final response = await http.get(httpServices.uri('/list'));
+      final response = await client.get('list');
       if (response.statusCode == 200) {
         return RestaurantListResponse.fromJson(jsonDecode(response.body));
       } else {
@@ -24,7 +23,7 @@ class RestaurantServices {
 
   Future<RestaurantDetailResponse> getDetailRestaurant(String id) async {
     try {
-      final response = await http.get(httpServices.uri('/detail/$id'));
+      final response = await client.get('detail/$id');
       if (response.statusCode == 200) {
         return RestaurantDetailResponse.fromJson(jsonDecode(response.body));
       } else {
