@@ -21,4 +21,17 @@ class RestaurantServices {
       throw Exception('Error Internal: $e');
     }
   }
+
+  Future<RestaurantDetailResponse> getDetailRestaurant(String id) async {
+    try {
+      final response = await http.get(httpServices.uri('/detail/$id'));
+      if (response.statusCode == 200) {
+        return RestaurantDetailResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load restaurants');
+      }
+    } catch (e) {
+      throw Exception('Error Internal : ${e.toString()}');
+    }
+  }
 }
