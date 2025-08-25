@@ -7,10 +7,12 @@ class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({
     super.key,
     required this.id,
+    required this.pictureId,
     required this.restaurantName,
   });
 
   final String id;
+  final String pictureId;
   final String restaurantName;
 
   @override
@@ -113,6 +115,24 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Hero(
+                    tag: widget.pictureId,
+                    child: Image.network(
+                      "https://restaurant-api.dicoding.dev/images/small/${widget.pictureId}",
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Icon(Icons.broken_image, color: Colors.grey),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 8),
               //Heading text
               Text("Review Untuk Restoran:", style: textTheme.bodySmall),
               TitleMedium(text: widget.restaurantName),

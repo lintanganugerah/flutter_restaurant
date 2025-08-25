@@ -36,14 +36,17 @@ class RestaurantListCard extends StatelessWidget {
                   height: 120,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.broken_image, color: Colors.grey),
-                        );
-                      },
+                    child: Hero(
+                      tag: restaurant.pictureId,
+                      child: Image.network(
+                        "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                            child: Icon(Icons.broken_image, color: Colors.grey),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

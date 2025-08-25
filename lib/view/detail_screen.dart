@@ -88,17 +88,20 @@ class _DetailScreenState extends State<DetailScreen> {
                         height: 300,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(24),
-                          child: Image.network(
-                            "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
+                          child: Hero(
+                            tag: restaurant.pictureId,
+                            child: Image.network(
+                              "https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}",
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -273,6 +276,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             return AddReviewScreen(
                               id: restaurant!.id,
                               restaurantName: restaurant.name,
+                              pictureId: restaurant.pictureId,
                             );
                           },
                         ),
