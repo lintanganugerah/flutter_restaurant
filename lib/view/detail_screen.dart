@@ -224,8 +224,6 @@ class _DetailScreenState extends State<DetailScreen> {
                               style: textTheme.bodySmall?.copyWith(
                                 color: Colors.grey[600],
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 24),
                             //Menu
