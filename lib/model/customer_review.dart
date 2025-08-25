@@ -1,12 +1,14 @@
 class CustomerReview {
   String name;
   String review;
-  String date;
+  String? date;
+  String? id;
 
   CustomerReview({
     required this.name,
     required this.review,
-    required this.date,
+    this.date,
+    this.id,
   });
 
   factory CustomerReview.fromJson(Map<String, dynamic> json) => CustomerReview(
@@ -15,9 +17,30 @@ class CustomerReview {
     date: json["date"],
   );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, Object> toJson() => {
+    "id": id ?? '',
     "name": name,
     "review": review,
-    "date": date,
   };
+}
+
+class AddReviewResponse {
+  bool error;
+  String message;
+  List<CustomerReview> customerReviews;
+
+  AddReviewResponse({
+    required this.error,
+    required this.message,
+    required this.customerReviews,
+  });
+
+  factory AddReviewResponse.fromJson(Map<String, dynamic> json) =>
+      AddReviewResponse(
+        error: json["error"],
+        message: json["message"],
+        customerReviews: List<CustomerReview>.from(
+          json["customerReviews"].map((x) => CustomerReview.fromJson(x)),
+        ),
+      );
 }

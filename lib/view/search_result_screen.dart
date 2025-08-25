@@ -21,7 +21,6 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     super.initState();
     _viewModel = Provider.of<RestaurantViewModel>(context, listen: false);
     //Tunggu hingga build selesai
-    print(widget.query);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _viewModel.searchRestaurant(widget.query);
     });

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/model/menu.dart';
 import 'package:restaurant_flutter/type/menu_type.dart';
+import 'package:restaurant_flutter/view/add_review_screen.dart';
 import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';
 import 'package:restaurant_flutter/widgets/card_menu.dart';
 import 'package:restaurant_flutter/widgets/review_card.dart';
@@ -257,6 +258,31 @@ class _DetailScreenState extends State<DetailScreen> {
           }
         },
       ),
+      floatingActionButton: Consumer<RestaurantViewModel>(
+        builder: (context, viewmodel, child) {
+          switch (viewmodel.resultRestaurantDetail) {
+            case RestaurantDetailDataLoaded(data: final restaurant):
+              return FloatingActionButton(
+                onPressed: () => {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return AddReviewScreen(
+                          id: restaurant!.id,
+                          restaurantName: restaurant.name,
+                        );
+                      },
+                    ),
+                  ),
+                },
+                child: const Icon(Icons.reviews),
+              );
+            default:
+              return const SizedBox.shrink();
+          }
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

@@ -45,7 +45,6 @@ class RestaurantViewModel extends ChangeNotifier {
   }
 
   void searchRestaurant(String query) async {
-    print('Dari ViewModel Query nya : $query');
     _emitSearch(RestaurantSearchDataLoading());
     try {
       final data = await client.searchRestaurants(query);

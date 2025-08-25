@@ -31,7 +31,7 @@ class ReviewCard extends StatelessWidget {
                 ),
               ),
               Text(
-                review.date,
+                review.date ?? "No Date",
                 style: textTheme.bodySmall?.copyWith(
                   color: Colors.grey.shade600,
                 ),
