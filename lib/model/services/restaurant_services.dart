@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/type/network_client.dart';
 
@@ -14,10 +15,17 @@ class RestaurantServices {
       if (response.statusCode == 200) {
         return RestaurantListResponse.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception('Failed to load restaurants');
+        throw Exception(
+          'Gagal Memuat Data Restaurant. Harap Coba Lagi Nanti. Status Code: ${response.statusCode}',
+        );
       }
     } catch (e) {
-      throw Exception('Error Internal: $e');
+      if (e is ClientException) {
+        throw Exception(
+          "Tidak Dapat Terhubung ke Internet. Harap Cek Koneksi Anda",
+        );
+      }
+      throw Exception(e.toString());
     }
   }
 
@@ -27,10 +35,17 @@ class RestaurantServices {
       if (response.statusCode == 200) {
         return RestaurantDetailResponse.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception('Failed to load restaurants');
+        throw Exception(
+          'Gagal Memuat Data Restaurant. Harap Coba Lagi Nanti. Status Code: ${response.statusCode}',
+        );
       }
     } catch (e) {
-      throw Exception('Error Internal : ${e.toString()}');
+      if (e is ClientException) {
+        throw Exception(
+          "Tidak Dapat Terhubung ke Internet. Harap Cek Koneksi Anda",
+        );
+      }
+      throw Exception(e.toString());
     }
   }
 
@@ -40,10 +55,17 @@ class RestaurantServices {
       if (response.statusCode == 200) {
         return RestaurantSearchResponse.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception('Failed to load restaurants');
+        throw Exception(
+          'Gagal Memuat Data Restaurant. Harap Coba Lagi Nanti. Status Code: ${response.statusCode}',
+        );
       }
     } catch (e) {
-      throw Exception('Error Internal: $e');
+      if (e is ClientException) {
+        throw Exception(
+          "Tidak Dapat Terhubung ke Internet. Harap Cek Koneksi Anda",
+        );
+      }
+      throw Exception(e.toString());
     }
   }
 }

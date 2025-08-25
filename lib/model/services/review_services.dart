@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/type/network_client.dart';
 
@@ -11,20 +12,21 @@ class ReviewServices {
     Map<String, Object> body,
   ) async {
     try {
-      print(body);
       final response = await client.post('review', body: body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         return AddReviewResponse.fromJson(jsonDecode(response.body));
       } else {
-        print('Request failed with status: ${response.statusCode}.');
-        print('Response body: ${response.body}');
-
         throw Exception(
-          'Failed to add review. Status code: ${response.statusCode}',
+          'Gagal menambahkan review. Harap Coba Kembali Nanti. Status code: ${response.statusCode}',
         );
       }
     } catch (e) {
-      throw Exception('Error Internal: $e');
+      if (e is ClientException) {
+        throw Exception(
+          "Tidak Dapat Terhubung ke Internet. Harap Cek Koneksi Anda",
+        );
+      }
+      throw Exception(e.toString());
     }
   }
 }

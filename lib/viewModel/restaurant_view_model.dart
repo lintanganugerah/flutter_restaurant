@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
+import 'package:restaurant_flutter/utils/error_message.dart';
 
 class RestaurantViewModel extends ChangeNotifier {
   final RestaurantServices client;
@@ -31,7 +32,7 @@ class RestaurantViewModel extends ChangeNotifier {
       final data = await client.getListRestaurants();
       _emitList(RestaurantListDataLoaded(data.restaurants));
     } catch (e) {
-      _emitList(RestaurantListDataError(e.toString()));
+      _emitList(RestaurantListDataError(errorMessage(e)));
     }
   }
 
@@ -41,7 +42,7 @@ class RestaurantViewModel extends ChangeNotifier {
       final data = await client.getDetailRestaurant(id);
       _emitDetail(RestaurantDetailDataLoaded(data.restaurant));
     } catch (e) {
-      _emitDetail(RestaurantDetailDataError(e.toString()));
+      _emitDetail(RestaurantDetailDataError(errorMessage(e)));
     }
   }
 
@@ -51,7 +52,7 @@ class RestaurantViewModel extends ChangeNotifier {
       final data = await client.searchRestaurants(query);
       _emitSearch(RestaurantSearchDataLoaded(data.restaurants));
     } catch (e) {
-      _emitSearch(RestaurantSearchDataError(e.toString()));
+      _emitSearch(RestaurantSearchDataError(errorMessage(e)));
     }
   }
 

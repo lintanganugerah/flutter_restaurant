@@ -1,13 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/services/review_services.dart';
+import 'package:restaurant_flutter/utils/error_message.dart';
 
 class ReviewViewModel extends ChangeNotifier {
   final ReviewServices client;
 
   ReviewViewModel(this.client);
 
-  //State or Result Restaurant List
+  //State or Result Review
   ResultReview _resultReview = ResultReviewNothing();
 
   ResultReview get resultReview => _resultReview;
@@ -29,7 +30,7 @@ class ReviewViewModel extends ChangeNotifier {
       final response = await client.postReviewRestaurant(jsonPayload);
       _emit(ResultReviewLoaded(response.customerReviews));
     } catch (e) {
-      _emit(ResultReviewError(e.toString()));
+      _emit(ResultReviewError(errorMessage(e)));
     }
   }
 
