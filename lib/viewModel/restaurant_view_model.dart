@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
 
@@ -51,6 +52,34 @@ class RestaurantViewModel extends ChangeNotifier {
       _emitSearch(RestaurantSearchDataLoaded(data.restaurants));
     } catch (e) {
       _emitSearch(RestaurantSearchDataError(e.toString()));
+    }
+  }
+
+  void updateCustomerReviews(List<CustomerReview> newReviews) {
+    // Pastikan state saat ini adalah Loaded (sudah ada data)
+    if (_resultRestaurantDetail is RestaurantDetailDataLoaded) {
+      // Ambil data restoran yang ada saat ini
+      final currentRestaurant =
+          (_resultRestaurantDetail as RestaurantDetailDataLoaded).data;
+
+      if (currentRestaurant != null) {
+        // Buat instance Restaurant baru dengan daftar review yang sudah diperbarui
+        final updatedRestaurant = Restaurant(
+          id: currentRestaurant.id,
+          name: currentRestaurant.name,
+          description: currentRestaurant.description,
+          city: currentRestaurant.city,
+          pictureId: currentRestaurant.pictureId,
+          rating: currentRestaurant.rating,
+          address: currentRestaurant.address,
+          categories: currentRestaurant.categories,
+          menu: currentRestaurant.menu,
+          customerReviews: newReviews, //Review baru
+        );
+
+        // Emit state baru dengan data yang sudah diupdate
+        _emitDetail(RestaurantDetailDataLoaded(updatedRestaurant));
+      }
     }
   }
 

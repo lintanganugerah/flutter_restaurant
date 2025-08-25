@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/menu.dart';
 import 'package:restaurant_flutter/type/menu_type.dart';
 import 'package:restaurant_flutter/view/add_review_screen.dart';
@@ -263,17 +264,24 @@ class _DetailScreenState extends State<DetailScreen> {
           switch (viewmodel.resultRestaurantDetail) {
             case RestaurantDetailDataLoaded(data: final restaurant):
               return FloatingActionButton(
-                onPressed: () => {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return AddReviewScreen(
-                          id: restaurant!.id,
-                          restaurantName: restaurant.name,
-                        );
-                      },
-                    ),
-                  ),
+                onPressed: () async {
+                  //Menunggu hasil dari screen add review
+                  final result = await Navigator.of(context)
+                      .push<List<CustomerReview>>(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return AddReviewScreen(
+                              id: restaurant!.id,
+                              restaurantName: restaurant.name,
+                            );
+                          },
+                        ),
+                      );
+
+                  // Update Review jika ada hasil dari screen
+                  if (result != null && mounted) {
+                    _viewModel.updateCustomerReviews(result);
+                  }
                 },
                 child: const Icon(Icons.reviews),
               );

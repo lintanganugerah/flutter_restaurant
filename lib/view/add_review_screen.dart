@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_flutter/view/detail_screen.dart';
 import 'package:restaurant_flutter/viewModel/review_view_model.dart';
 import 'package:restaurant_flutter/widgets/title_medium.dart';
 
@@ -44,26 +43,25 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   void _handleStateChange() {
     if (!mounted) return;
     switch (_viewModel.resultReview) {
-      case ResultReviewLoaded():
+      //Jika add review berhasil
+      case ResultReviewLoaded(data: final newReviewList):
         setState(() => _isLoading = false);
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Review berhasil ditambahkan!'),
             backgroundColor: Colors.green,
           ),
         );
+
         Future.delayed(const Duration(milliseconds: 500), () {
+          //Jika halaman masih mount, kembalikan ke halaman sebelumnya dengan data review baru
           if (mounted) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) {
-                  return DetailScreen(id: widget.id);
-                },
-              ),
-            );
+            Navigator.pop(context, newReviewList);
           }
         });
         break;
+      //Jika add review gagal
       case ResultReviewError(message: final msg):
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -115,9 +113,11 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              //Heading text
               Text("Review Untuk Restoran:", style: textTheme.bodySmall),
               TitleMedium(text: widget.restaurantName),
               SizedBox(height: 24),
+              //Form Nama dan Review
               Form(
                 key: _formKey,
                 child: Column(
@@ -159,6 +159,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                   ],
                 ),
               ),
+              // Tombol Submit
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
