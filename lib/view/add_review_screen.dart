@@ -112,92 +112,96 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Hero(
-                    tag: widget.pictureId,
-                    child: Image.network(
-                      "https://restaurant-api.dicoding.dev/images/small/${widget.pictureId}",
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.broken_image, color: Colors.grey),
-                        );
-                      },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 300,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Hero(
+                      tag: widget.pictureId,
+                      child: Image.network(
+                        "https://restaurant-api.dicoding.dev/images/small/${widget.pictureId}",
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const Center(
+                            child: Icon(Icons.broken_image, color: Colors.grey),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: 8),
-              //Heading text
-              Text("Review Untuk Restoran:", style: textTheme.bodySmall),
-              TitleMedium(text: widget.restaurantName),
-              SizedBox(height: 24),
-              //Form Nama dan Review
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Nama"),
-                    TextFormField(
-                      controller: _formControllerName,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Nama tidak boleh kosong';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    Text("Review"),
-                    TextFormField(
-                      controller: _formControllerReview,
-                      minLines: 3,
-                      maxLines: 5,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(24.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Review tidak boleh kosong';
-                        }
-                        return null;
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              // Tombol Submit
-              const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _submit,
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
+                SizedBox(height: 8),
+                //Heading text
+                Text("Review Untuk Restoran:", style: textTheme.bodySmall),
+                TitleMedium(text: widget.restaurantName),
+                SizedBox(height: 24),
+                //Form Nama dan Review
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Nama"),
+                      TextFormField(
+                        controller: _formControllerName,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24.0),
                           ),
-                        )
-                      : const Text('Kirim Review'),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Nama tidak boleh kosong';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      Text("Review"),
+                      TextFormField(
+                        controller: _formControllerReview,
+                        minLines: 3,
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(24.0),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Review tidak boleh kosong';
+                          }
+                          return null;
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                // Tombol Submit
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _submit,
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text('Kirim Review'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
