@@ -13,7 +13,7 @@ class Restaurant {
   // Data dari API detail
   String? address;
   List<Category>? categories;
-  Menus? menus;
+  Menu? menu;
   List<CustomerReview>? customerReviews;
 
   Restaurant({
@@ -26,7 +26,7 @@ class Restaurant {
     // Data di bawah ini akan ada jika dari API details sehingga opsional
     this.address,
     this.categories,
-    this.menus,
+    this.menu,
     this.customerReviews,
   });
 
@@ -44,7 +44,7 @@ class Restaurant {
         : List<Category>.from(
             json["categories"].map((x) => Category.fromJson(x)),
           ),
-    menus: json["menus"] == null ? null : Menus.fromJson(json["menus"]),
+    menu: json["menus"] == null ? null : Menu.fromJson(json["menus"]),
     customerReviews: json["customerReviews"] == null
         ? null
         : List<CustomerReview>.from(
@@ -74,6 +74,29 @@ class RestaurantListResponse {
         restaurants: List<Restaurant>.from(
           json["restaurants"].map((x) => Restaurant.fromJson(x)),
         ),
+      );
+}
+
+class RestaurantSearchResponse {
+  bool error;
+  int founded;
+  List<Restaurant> restaurants;
+
+  RestaurantSearchResponse({
+    required this.error,
+    required this.founded,
+    required this.restaurants,
+  });
+
+  factory RestaurantSearchResponse.fromJson(Map<String, dynamic> json) =>
+      RestaurantSearchResponse(
+        error: json["error"],
+        founded: json["founded"] ?? 0,
+        restaurants: json["restaurants"] == null
+            ? []
+            : List<Restaurant>.from(
+                json["restaurants"].map((x) => Restaurant.fromJson(x)),
+              ),
       );
 }
 

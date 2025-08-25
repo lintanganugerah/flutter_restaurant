@@ -33,4 +33,17 @@ class RestaurantServices {
       throw Exception('Error Internal : ${e.toString()}');
     }
   }
+
+  Future<RestaurantSearchResponse> searchRestaurants(String query) async {
+    try {
+      final response = await client.get('search?q=$query');
+      if (response.statusCode == 200) {
+        return RestaurantSearchResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load restaurants');
+      }
+    } catch (e) {
+      throw Exception('Error Internal: $e');
+    }
+  }
 }

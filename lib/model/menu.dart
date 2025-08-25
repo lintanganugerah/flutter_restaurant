@@ -1,15 +1,35 @@
-import 'package:restaurant_flutter/model/category.dart';
+import 'package:restaurant_flutter/type/menu_type.dart';
 
-class Menus {
-  List<Category> foods;
-  List<Category> drinks;
+class MenuItem {
+  String name;
 
-  Menus({required this.foods, required this.drinks});
+  MenuItem({required this.name});
 
-  factory Menus.fromJson(Map<String, dynamic> json) => Menus(
-    foods: List<Category>.from(json["foods"].map((x) => Category.fromJson(x))),
-    drinks: List<Category>.from(
-      json["drinks"].map((x) => Category.fromJson(x)),
+  factory MenuItem.fromJson(Map<String, dynamic> json) =>
+      MenuItem(name: json["name"]);
+
+  Map<String, dynamic> toJson() => {"name": name};
+}
+
+class Menu {
+  List<MenuItem> foods;
+  List<MenuItem> drinks;
+
+  Menu({required this.foods, required this.drinks});
+
+  List<MenuItem> getListByType(MenuType type) {
+    switch (type) {
+      case MenuType.foods:
+        return foods;
+      case MenuType.drinks:
+        return drinks;
+    }
+  }
+
+  factory Menu.fromJson(Map<String, dynamic> json) => Menu(
+    foods: List<MenuItem>.from(json["foods"].map((x) => MenuItem.fromJson(x))),
+    drinks: List<MenuItem>.from(
+      json["drinks"].map((x) => MenuItem.fromJson(x)),
     ),
   );
 

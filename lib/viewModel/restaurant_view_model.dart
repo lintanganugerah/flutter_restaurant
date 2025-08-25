@@ -17,7 +17,14 @@ class RestaurantViewModel extends ChangeNotifier {
 
   RestaurantDetailData get resultRestaurantDetail => _resultRestaurantDetail;
 
+  //Search Result Restaurant
+  RestaurantSearchData _resultRestaurantSearch = RestaurantSearchDataNothing();
+
+  RestaurantSearchData get resultRestaurantSearch => _resultRestaurantSearch;
+
   void getListRestaurant() async {
+    //Jika data sudah ada dalam state maka tidak perlu fetch ulang
+    if (_resultRestaurantList is RestaurantListDataLoaded) return;
     _emitList(RestaurantListDataLoading());
     try {
       final data = await client.getListRestaurants();
@@ -37,8 +44,24 @@ class RestaurantViewModel extends ChangeNotifier {
     }
   }
 
+  void searchRestaurant(String query) async {
+    print('Dari ViewModel Query nya : $query');
+    _emitSearch(RestaurantSearchDataLoading());
+    try {
+      final data = await client.searchRestaurants(query);
+      _emitSearch(RestaurantSearchDataLoaded(data.restaurants));
+    } catch (e) {
+      _emitSearch(RestaurantSearchDataError(e.toString()));
+    }
+  }
+
   void _emitList(RestaurantListData state) {
     _resultRestaurantList = state;
+    notifyListeners();
+  }
+
+  void _emitSearch(RestaurantSearchData state) {
+    _resultRestaurantSearch = state;
     notifyListeners();
   }
 
@@ -48,7 +71,11 @@ class RestaurantViewModel extends ChangeNotifier {
   }
 
   void cleanDetailRestaurantData() {
-    _emitDetail(RestaurantDetailDataNothing());
+    _resultRestaurantDetail = RestaurantDetailDataNothing();
+  }
+
+  void cleanSearchRestaurantData() {
+    _resultRestaurantSearch = RestaurantSearchDataNothing();
   }
 }
 
@@ -56,15 +83,21 @@ sealed class RestaurantListData {}
 
 sealed class RestaurantDetailData {}
 
+sealed class RestaurantSearchData {}
+
 //Nothing
 class RestaurantListDataNothing extends RestaurantListData {}
 
 class RestaurantDetailDataNothing extends RestaurantDetailData {}
 
+class RestaurantSearchDataNothing extends RestaurantSearchData {}
+
 //Loading
 class RestaurantListDataLoading extends RestaurantListData {}
 
 class RestaurantDetailDataLoading extends RestaurantDetailData {}
+
+class RestaurantSearchDataLoading extends RestaurantSearchData {}
 
 //Loaded
 class RestaurantListDataLoaded extends RestaurantListData {
@@ -79,6 +112,12 @@ class RestaurantDetailDataLoaded extends RestaurantDetailData {
   RestaurantDetailDataLoaded(this.data);
 }
 
+class RestaurantSearchDataLoaded extends RestaurantSearchData {
+  final List<Restaurant>? data;
+
+  RestaurantSearchDataLoaded(this.data);
+}
+
 //Error
 class RestaurantListDataError extends RestaurantListData {
   final String message;
@@ -90,4 +129,10 @@ class RestaurantDetailDataError extends RestaurantDetailData {
   final String message;
 
   RestaurantDetailDataError(this.message);
+}
+
+class RestaurantSearchDataError extends RestaurantSearchData {
+  final String message;
+
+  RestaurantSearchDataError(this.message);
 }
