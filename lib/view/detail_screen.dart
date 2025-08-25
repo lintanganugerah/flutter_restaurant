@@ -197,21 +197,19 @@ class _DetailScreenState extends State<DetailScreen> {
                               text: "Review",
                               fontWeight: FontWeight.w300,
                             ),
-                            SizedBox(
-                              height: 150,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    restaurant.customerReviews?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  final customerReview =
-                                      restaurant.customerReviews![index];
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: restaurant.customerReviews!.map((
+                                  review,
+                                ) {
                                   return Container(
                                     width: 300,
-                                    margin: const EdgeInsets.only(right: 12.0),
-                                    child: ReviewCard(review: customerReview),
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    child: ReviewCard(review: review),
                                   );
-                                },
+                                }).toList(),
                               ),
                             ),
                             //Deskripsi
