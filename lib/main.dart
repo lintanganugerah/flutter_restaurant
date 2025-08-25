@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_flutter/model/network/http_adapter.dart';
+import 'package:restaurant_flutter/model/services/restaurant_services.dart';
+import 'package:restaurant_flutter/model/services/review_services.dart';
+import 'package:restaurant_flutter/type/network_client.dart';
 import 'package:restaurant_flutter/view/home_screen.dart';
+import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';
+import 'package:http/http.dart' as http;
+import 'package:restaurant_flutter/viewModel/review_view_model.dart';
 
 void main() {
-  runApp(const MyApp());
+  final INetworkClient httpClient = HttpAdapter(http.Client());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) =>
+              RestaurantViewModel(RestaurantServices(client: httpClient)),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              ReviewViewModel(ReviewServices(client: httpClient)),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
