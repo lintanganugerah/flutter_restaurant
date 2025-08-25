@@ -82,7 +82,7 @@ class _HomescreenState extends State<Homescreen> {
 
                       // Case Error
                       case RestaurantListDataError(message: final msg):
-                        return Center(child: Text('Terjadi suatu error: $msg'));
+                        return Center(child: Text(msg));
 
                       // Case berhasil
                       case RestaurantListDataLoaded(data: final restaurants):

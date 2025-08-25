@@ -25,30 +25,27 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   final _formControllerReview = TextEditingController();
 
   late final ReviewViewModel _viewModel;
-  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<ReviewViewModel>(context, listen: false);
-    _viewModel.addListener(_handleStateChange);
+    _viewModel.addListener(_handleSideEffect);
   }
 
   @override
   void dispose() {
-    _viewModel.removeListener(_handleStateChange);
+    _viewModel.removeListener(_handleSideEffect);
     _formControllerName.dispose();
     _formControllerReview.dispose();
     super.dispose();
   }
 
-  void _handleStateChange() {
+  void _handleSideEffect() {
     if (!mounted) return;
     switch (_viewModel.resultReview) {
       //Jika add review berhasil
       case ResultReviewLoaded(data: final newReviewList):
-        setState(() => _isLoading = false);
-
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Review berhasil ditambahkan!'),
@@ -65,7 +62,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
         break;
       //Jika add review gagal
       case ResultReviewError(message: final msg):
-        setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Gagal: $msg'), backgroundColor: Colors.red),
         );
@@ -77,7 +73,6 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
-      setState(() => _isLoading = true);
       final nameData = _formControllerName.text.trim();
       final reviewData = _formControllerReview.text.trim();
       _viewModel.postReview(
@@ -186,18 +181,25 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 const SizedBox(height: 32),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _submit,
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text('Kirim Review'),
+                  child: Consumer<ReviewViewModel>(
+                    builder: (context, viewModel, child) {
+                      final isLoading =
+                          viewModel.resultReview is ResultReviewLoading;
+
+                      return ElevatedButton(
+                        onPressed: isLoading ? null : _submit,
+                        child: isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('Kirim Review'),
+                      );
+                    },
                   ),
                 ),
               ],

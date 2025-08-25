@@ -43,10 +43,7 @@ class ReviewCard extends StatelessWidget {
           // Teks
           Text(
             '"${review.review}"',
-            style: textTheme.bodyMedium?.copyWith(
-              fontStyle: FontStyle.italic,
-              color: Colors.black87,
-            ),
+            style: textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
           ),
         ],
       ),
