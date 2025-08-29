@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
-import 'package:restaurant_flutter/provider_list.dart';
+import 'package:restaurant_flutter/app_provider_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(useProviderList(child: const MyApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  runApp(
+    MultiProvider(
+      providers: createAppProviderList(sharedPreferences: prefs),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
