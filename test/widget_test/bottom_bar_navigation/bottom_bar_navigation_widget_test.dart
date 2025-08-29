@@ -1,18 +1,29 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_items_list.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
-import 'package:restaurant_flutter/provider_list.dart';
+import 'package:restaurant_flutter/app_provider_list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final bottomNavbarWidgetWithProvider = useProviderList(
-  child: const MaterialApp(home: BottomNavigationScreen()),
-);
+Widget bottomNavbarWidgetWithProvider(sharedPreferences) {
+  return MultiProvider(
+    providers: createAppProviderList(sharedPreferences: sharedPreferences),
+    child: const MaterialApp(home: BottomNavigationScreen()),
+  );
+}
 
 void main() {
+  //Mock Shared Preferences
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
   testWidgets('BottomNavigationBar should display item list', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(bottomNavbarWidgetWithProvider);
+    final prefs = await SharedPreferences.getInstance();
+    await tester.pumpWidget(bottomNavbarWidgetWithProvider(prefs));
+    await tester.pumpAndSettle();
 
     // Daftar item list
     final items = BottomNavItemsList.itemsList;
@@ -32,21 +43,27 @@ void main() {
   });
 
   testWidgets('BottomNavigationBar changes page when tapped', (tester) async {
-    await tester.pumpWidget(bottomNavbarWidgetWithProvider);
+    //Ubah jadi menggunakan key
+    final prefs = await SharedPreferences.getInstance();
+    await tester.pumpWidget(bottomNavbarWidgetWithProvider(prefs));
+    await tester.pumpAndSettle();
 
-    // Default halaman di Home
-    expect(find.text('Restaurant'), findsOneWidget);
+    //Default langsung ke home_screen
+    expect(find.byKey(const Key('home_screen')), findsOneWidget);
 
-    // Tap menu Favorites
+    // Tap menu Favorites (Menggunakan Icon lebih stabil karena jarang akan diubah)
     await tester.tap(find.byIcon(Icons.favorite));
     await tester.pumpAndSettle();
 
-    expect(find.text('Favorites Page'), findsOneWidget);
+    //Cek apakah benar di halaman favorite by key nya
+    expect(find.byKey(const Key('favorite_screen')), findsOneWidget);
+    //Memastikan sudah tidak di halaman ini ketika tap favorite_screen
+    expect(find.byKey(const Key('home_screen')), findsNothing);
 
-    // Tap menu Settings
     await tester.tap(find.byIcon(Icons.settings));
     await tester.pumpAndSettle();
 
-    expect(find.text('Settings Page'), findsOneWidget);
+    expect(find.byKey(const Key('settings_screen')), findsOneWidget);
+    expect(find.byKey(const Key('favorite_screen')), findsNothing);
   });
 }
