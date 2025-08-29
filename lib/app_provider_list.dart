@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:restaurant_flutter/model/network/http_adapter.dart';
