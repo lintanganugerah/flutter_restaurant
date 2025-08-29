@@ -10,8 +10,9 @@ class BottomNavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BottomNavigationViewModel>(
       builder: (context, viewModel, child) {
+        final item = BottomNavItemsList.itemsList[viewModel.currentIndex];
         return Scaffold(
-          body: BottomNavItemsList.itemsList[viewModel.currentIndex].page,
+          body: item.page,
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: viewModel.currentIndex,
             items: BottomNavItemsList.itemsList
@@ -23,6 +24,7 @@ class BottomNavigationScreen extends StatelessWidget {
                 )
                 .toList(),
             onTap: viewModel.setIndex,
+            key: item.key,
           ),
         );
       },
