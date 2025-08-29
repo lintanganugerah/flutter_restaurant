@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
 import 'package:restaurant_flutter/app_provider_list.dart';
+import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -21,11 +22,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsViewModel = context.watch<SettingsViewModel>();
+    final state = settingsViewModel.state;
+    final isDarkMode = (state is SettingsStateLoaded)
+        ? state.setting.isDarkMode
+        : false;
     return MaterialApp(
       title: 'Restaurant API',
       theme: _buildTheme(),
       darkTheme: _buildTheme(Brightness.dark),
-      themeMode: ThemeMode.system,
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       //Settings supaya ukuran font tetap sama meskipun settings system berbeda
       builder: (BuildContext context, child) {
         final mediaQueryData = MediaQuery.of(context);
