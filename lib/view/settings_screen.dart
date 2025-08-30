@@ -40,6 +40,7 @@ class SettingsPage extends StatelessWidget {
                               newVal,
                             );
                           },
+                          key: Key("dark_theme_switch"),
                         ),
                       );
                   }
