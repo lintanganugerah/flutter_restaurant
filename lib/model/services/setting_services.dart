@@ -10,9 +10,14 @@ class SettingsService {
 
   //Kita load berdasarkan dari shared Preferences
   Future<Setting> loadSettings() async {
-    return Setting(
-      isDarkMode: _pref.getBool(_kDarkModeKey) ?? false, // Default value false
-    );
+    try {
+      return Setting(
+        isDarkMode:
+            _pref.getBool(_kDarkModeKey) ?? false, // Default value false
+      );
+    } catch (e) {
+      throw Exception("Failed to load setting.");
+    }
   }
 
   //Simpan settings ke shared preferences

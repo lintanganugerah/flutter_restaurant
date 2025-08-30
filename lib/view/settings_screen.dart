@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
+import 'package:restaurant_flutter/widgets/settings_card.dart';
 import 'package:restaurant_flutter/widgets/text_body_small.dart';
 import 'package:restaurant_flutter/widgets/title_medium.dart';
 
@@ -29,7 +30,7 @@ class SettingsPage extends StatelessWidget {
                       return Center(child: TextBodySmall(text: message));
 
                     case SettingsStateLoaded(setting: final setting):
-                      return _buildSettings(
+                      return SettingsCard(
                         title: "Dark Theme",
                         description: "Change App Theme to Dark",
                         widget: Switch(
@@ -39,6 +40,7 @@ class SettingsPage extends StatelessWidget {
                               newVal,
                             );
                           },
+                          key: Key("dark_theme_switch"),
                         ),
                       );
                   }
@@ -48,27 +50,6 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSettings({
-    required String title,
-    required String description,
-    required Widget widget,
-  }) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TitleMedium(text: title),
-              TextBodySmall(text: description, fontSize: 12),
-            ],
-          ),
-        ),
-        widget,
-      ],
     );
   }
 }
