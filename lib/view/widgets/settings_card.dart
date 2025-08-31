@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:restaurant_flutter/widgets/text_body_small.dart';
-import 'package:restaurant_flutter/widgets/title_medium.dart';
+import 'package:restaurant_flutter/view/widgets/text_body_small.dart';
+import 'package:restaurant_flutter/view/widgets/title_medium.dart';
 
 class SettingsCard extends StatelessWidget {
   final String title;

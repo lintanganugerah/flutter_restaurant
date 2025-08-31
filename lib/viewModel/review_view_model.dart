@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/services/review_services.dart';
-import 'package:restaurant_flutter/utils/error_message.dart';
+import 'package:restaurant_flutter/model/utils/error_message.dart';
 
 class ReviewViewModel extends ChangeNotifier {
   final ReviewServices client;

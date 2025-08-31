@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/model/services/setting_services.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
-import 'package:restaurant_flutter/widgets/settings_card.dart';
+import 'package:restaurant_flutter/view/widgets/settings_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restaurant_flutter/view/settings_screen.dart';
 
@@ -25,7 +25,7 @@ Widget settingsPage(SharedPreferences pref) {
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
           darkTheme: ThemeData.dark(),
           theme: ThemeData.light(),
-          home: const SettingsPage(), // Asumsi ini adalah UI Anda
+          home: const SettingsPage(),
         );
       },
     ),

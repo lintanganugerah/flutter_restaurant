@@ -51,6 +51,17 @@ class Restaurant {
             json["customerReviews"].map((x) => CustomerReview.fromJson(x)),
           ),
   );
+
+  /// hashCode-nya kita ubah berdasarkan id agar operator di bawah ini paham
+  @override
+  int get hashCode => id.hashCode;
+
+  /// Dengan kode ini, kita memberitahu Dart sebuah aturan baru:
+  /// Objek Restaurant dianggap sama berdasarkan properti 'id' bukan berdasarkan memori
+  @override
+  bool operator ==(Object other) {
+    return other is Restaurant && other.id == id;
+  }
 }
 
 class RestaurantListResponse {

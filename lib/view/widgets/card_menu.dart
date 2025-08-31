@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/model/menu.dart';
-import 'package:restaurant_flutter/type/menu_type.dart';
+import 'package:restaurant_flutter/model/type/menu_type.dart';
 
 class CardMenu extends StatelessWidget {
   const CardMenu({super.key, required this.data, required this.type});

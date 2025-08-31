@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
-import 'package:restaurant_flutter/utils/error_message.dart';
+import 'package:restaurant_flutter/model/utils/error_message.dart';
 
 class RestaurantViewModel extends ChangeNotifier {
   final RestaurantServices client;

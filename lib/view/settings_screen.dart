@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
-import 'package:restaurant_flutter/widgets/settings_card.dart';
-import 'package:restaurant_flutter/widgets/text_body_small.dart';
-import 'package:restaurant_flutter/widgets/title_medium.dart';
+import 'package:restaurant_flutter/view/widgets/settings_card.dart';
+import 'package:restaurant_flutter/view/widgets/text_body_small.dart';
+import 'package:restaurant_flutter/view/widgets/title_medium.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

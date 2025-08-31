@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
-import 'package:restaurant_flutter/type/network_client.dart';
+import 'package:restaurant_flutter/model/type/network_client.dart';
 
 class ReviewServices {
   final INetworkClient client;
