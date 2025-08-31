@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/model/bottom_nav_item.dart';
+import 'package:restaurant_flutter/view/favorites_restaurant_screen.dart';
 import 'package:restaurant_flutter/view/home_screen.dart';
 import 'package:restaurant_flutter/view/settings_screen.dart';
 
@@ -14,7 +15,7 @@ class BottomNavItemsList {
     BottomNavItem(
       icon: Icons.favorite,
       label: 'Favorites',
-      page: Placeholder(child: Center(child: const Text('Favorites Page'))),
+      page: FavoritesRestaurantScreen(),
       key: Key('favorite_screen'),
     ),
     BottomNavItem(
