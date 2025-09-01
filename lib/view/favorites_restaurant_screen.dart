@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
+import 'package:restaurant_flutter/viewModel/favorite_view_model.dart';
 import 'package:restaurant_flutter/widgets/restaurant_list_card.dart';
 import 'package:restaurant_flutter/widgets/title_medium.dart';
 
@@ -29,7 +31,22 @@ class FavoritesRestaurantScreen extends StatelessWidget {
             children: [
               const TitleMedium(text: "Favorites"),
               const SizedBox(height: 24),
-              Expanded(child: RestaurantListCard(data: listItems)),
+              Expanded(
+                child: Consumer<FavoriteViewModel>(
+                  builder: (context, vm, child) {
+                    switch (vm.favorites.isEmpty) {
+                      case true:
+                        return Center(
+                          child: const Text(
+                            'You dont have any favorited restaurant',
+                          ),
+                        );
+                      case false:
+                        return RestaurantListCard(data: vm.favorites);
+                    }
+                  },
+                ),
+              ),
             ],
           ),
         ),

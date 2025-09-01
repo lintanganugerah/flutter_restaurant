@@ -4,6 +4,7 @@ import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/menu.dart';
 import 'package:restaurant_flutter/type/menu_type.dart';
 import 'package:restaurant_flutter/view/add_review_screen.dart';
+import 'package:restaurant_flutter/viewModel/favorite_view_model.dart';
 import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';
 import 'package:restaurant_flutter/widgets/card_menu.dart';
 import 'package:restaurant_flutter/widgets/review_card.dart';
@@ -65,7 +66,15 @@ class _DetailScreenState extends State<DetailScreen> {
 
             //Case Error
             case RestaurantDetailDataError(message: final msg):
-              return Center(child: Text('Terjadi suatu error: $msg'));
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: Text(
+                    'Terjadi suatu error: $msg',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
 
             //Case Data Loaded / berhasil
             case RestaurantDetailDataLoaded(data: final restaurant):
@@ -111,9 +120,37 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 8),
                             //Nama Restoran
-                            TitleMedium(text: restaurant.name),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TitleMedium(text: restaurant.name),
+                                ),
+                                Consumer<FavoriteViewModel>(
+                                  builder: (context, vmFav, child) {
+                                    final isFav = vmFav.isFavorite(
+                                      restaurant.id,
+                                    );
+
+                                    return IconButton(
+                                      onPressed: () {
+                                        context
+                                            .read<FavoriteViewModel>()
+                                            .toggleFavorite(restaurant);
+                                      },
+                                      icon: Icon(
+                                        isFav
+                                            ? Icons.favorite
+                                            : Icons.favorite_border_outlined,
+                                        color: isFav
+                                            ? Colors.redAccent
+                                            : Colors.grey,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 4),
                             //Info lokasi
                             Row(
