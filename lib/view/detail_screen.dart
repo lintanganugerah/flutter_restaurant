@@ -126,12 +126,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                 Expanded(
                                   child: TitleMedium(text: restaurant.name),
                                 ),
-                                Consumer<FavoriteViewModel>(
-                                  builder: (context, vmFav, child) {
-                                    final isFav = vmFav.isFavorite(
-                                      restaurant.id,
-                                    );
+                                Selector<FavoriteViewModel, bool>(
+                                  selector: (context, viewModel) =>
+                                      viewModel.isFavorite(restaurant.id),
 
+                                  builder: (context, isFav, child) {
                                     return IconButton(
                                       onPressed: () {
                                         context

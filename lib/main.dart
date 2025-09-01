@@ -11,7 +11,11 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   runApp(
     MultiProvider(
-      providers: createAppProviderList(sharedPreferences: prefs),
+      providers: [
+        // Sediakan SharedPreferences melalui value agar bisa diakses oleh SettingsService melalui ProxyProvider.
+        Provider<SharedPreferences>.value(value: prefs),
+        ...createAppProviderList(),
+      ],
       child: const MyApp(),
     ),
   );

@@ -21,16 +21,30 @@ class FavoritesRestaurantScreen extends StatelessWidget {
               const SizedBox(height: 24),
               Expanded(
                 child: Consumer<FavoriteViewModel>(
-                  builder: (context, vm, child) {
-                    switch (vm.favorites.isEmpty) {
-                      case true:
-                        return Center(
-                          child: const Text(
-                            'You dont have any favorited restaurant',
-                          ),
-                        );
-                      case false:
-                        return RestaurantListCard(data: vm.favorites);
+                  builder: (context, viewModel, child) {
+                    switch (viewModel.state) {
+                      // State loading
+                      case FavoriteLoading():
+                        return const Center(child: CircularProgressIndicator());
+
+                      //State Success / Loaded
+                      case FavoriteLoaded(restaurants: final data):
+                        if (data.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'You dont have any favorited restaurant',
+                            ),
+                          );
+                        } else {
+                          return RestaurantListCard(data: data);
+                        }
+
+                      // State Error
+                      case FavoriteError(message: final msg):
+                        return Center(child: Text(msg));
+
+                      default:
+                        return SizedBox.shrink();
                     }
                   },
                 ),
