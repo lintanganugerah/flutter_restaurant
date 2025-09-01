@@ -4,7 +4,7 @@ import 'package:restaurant_flutter/model/network/http_adapter.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
 import 'package:restaurant_flutter/model/services/review_services.dart';
 import 'package:restaurant_flutter/model/services/setting_services.dart';
-import 'package:restaurant_flutter/type/network_client.dart';
+import 'package:restaurant_flutter/model/type/network_client.dart';
 import 'package:restaurant_flutter/viewModel/bottom_nav_view_model.dart';
 import 'package:restaurant_flutter/viewModel/favorite_view_model.dart';
 import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';

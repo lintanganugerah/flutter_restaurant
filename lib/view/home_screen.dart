@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/view/search_result_screen.dart';
 import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';
-import 'package:restaurant_flutter/widgets/restaurant_list_card.dart';
+import 'package:restaurant_flutter/view/widgets/restaurant_list_card.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/menu.dart';
-import 'package:restaurant_flutter/type/menu_type.dart';
+import 'package:restaurant_flutter/model/type/menu_type.dart';
 import 'package:restaurant_flutter/view/add_review_screen.dart';
 import 'package:restaurant_flutter/viewModel/favorite_view_model.dart';
 import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';
-import 'package:restaurant_flutter/widgets/card_menu.dart';
-import 'package:restaurant_flutter/widgets/review_card.dart';
-import 'package:restaurant_flutter/widgets/title_medium.dart';
+import 'package:restaurant_flutter/view/widgets/card_menu.dart';
+import 'package:restaurant_flutter/view/widgets/review_card.dart';
+import 'package:restaurant_flutter/view/widgets/title_medium.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key, required this.id});
