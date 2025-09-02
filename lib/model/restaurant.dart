@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:restaurant_flutter/model/category.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/menu.dart';

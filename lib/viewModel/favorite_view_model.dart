@@ -9,11 +9,6 @@ class FavoriteViewModel extends ChangeNotifier {
 
   FavoriteState get state => _state;
 
-  // melacak ID item yang sedang proses toggle favorit
-  String? _togglingId;
-
-  String? get togglingId => _togglingId;
-
   FavoriteViewModel({required FavoriteRepository favoriteRepository})
     : _repository = favoriteRepository {
     getFavorites();
@@ -28,7 +23,6 @@ class FavoriteViewModel extends ChangeNotifier {
       final result = await _repository.getFavorites();
       _emit(FavoriteLoaded(result));
     } catch (e) {
-      print(e);
       _emit(FavoriteError('Failed to load favorites data.'));
     }
     notifyListeners();
@@ -44,7 +38,6 @@ class FavoriteViewModel extends ChangeNotifier {
 
   Future<void> toggleFavorite(Restaurant restaurant) async {
     final isFavorited = isFavorite(restaurant.id);
-    _togglingId = restaurant.id;
     notifyListeners();
     try {
       if (isFavorited) {
@@ -56,9 +49,6 @@ class FavoriteViewModel extends ChangeNotifier {
       await getFavorites();
     } catch (e) {
       _emit(FavoriteError('Failed to favorite this items'));
-    } finally {
-      // Hapus status toggle setelah selesai
-      _togglingId = null;
     }
   }
 
