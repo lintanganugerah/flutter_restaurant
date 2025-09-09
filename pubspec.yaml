@@ -43,9 +43,12 @@ dependencies:
   sqflite_common_ffi: ^2.3.6
   flutter_local_notifications: ^19.4.1
   timezone: ^0.10.1
+  flutter_timezone: ^4.1.1
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to

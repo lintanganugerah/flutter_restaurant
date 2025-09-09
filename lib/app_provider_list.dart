@@ -23,9 +23,6 @@ List<SingleChildWidget> createAppProviderList() {
     Provider<http.Client>(create: (_) => http.Client()),
     Provider<DatabaseHelper>(create: (_) => DatabaseHelper()),
     Provider<LocalNotificationServices>(
-      create: (_) => LocalNotificationServices(),
-    ),
-    Provider<LocalNotificationServices>(
       create: (_) => LocalNotificationServices()..init(),
     ),
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_flutter/model/services/local_notification_services.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
 import 'package:restaurant_flutter/view/widgets/settings_card.dart';
 import 'package:restaurant_flutter/view/widgets/text_body_small.dart';
@@ -65,13 +66,24 @@ class SettingsPage extends StatelessWidget {
                           onChanged: (bool newVal) {
                             context
                                 .read<SettingsViewModel>()
-                                .toggleDailyReminder(newVal);
+                                .toggleDailyReminder(
+                                  value: newVal,
+                                  hour: 11,
+                                  minute: 00,
+                                );
                           },
                           key: Key("daily_reminder_switch"),
                         ),
                       );
                   }
                 },
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  LocalNotificationServices().showNotification();
+                },
+                child: const Text("Tampilkan notif"),
               ),
             ],
           ),

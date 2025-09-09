@@ -8,6 +8,8 @@ import 'package:restaurant_flutter/view/widgets/settings_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:restaurant_flutter/view/settings_screen.dart';
 
+import '../../mock_function.dart';
+
 Widget settingsPage(SharedPreferences pref) {
   return MultiProvider(
     providers: [
@@ -61,7 +63,7 @@ void main() {
       final findSettingsCard = find.byType(SettingsCard);
       expect(
         findSettingsCard,
-        findsOneWidget,
+        findsWidgets,
         reason: "Dalam page ada reusable widget settings",
       );
     });
@@ -126,6 +128,81 @@ void main() {
           isTrue,
           reason: "SharedPreferences seharusnya menyimpan state data dark mode",
         );
+      });
+    });
+
+    group("Daily Reminder Notification Switch", () {
+      // Helper untuk membuat widget tree dengan ViewModel yang sudah di-mock.
+      Widget createSettingsScreen(SettingsViewModel viewModel) {
+        return ChangeNotifierProvider.value(
+          value: viewModel,
+          child: MaterialApp(home: const SettingsPage()),
+        );
+      }
+
+      late SettingsViewModel viewModel;
+      late MockSettingsService mockSettingsService;
+      late MockLocalNotificationServices mockNotificationServices;
+
+      setUp(() async {
+        // Inisialisasi ulang semua komponen agar tes tidak saling mempengaruhi
+        mockSettingsService = MockSettingsService();
+        mockNotificationServices = MockLocalNotificationServices();
+        viewModel = SettingsViewModel(
+          mockSettingsService,
+          mockNotificationServices,
+        );
+        // Tunggu constructor ViewModel selesai memuat state awal (loadSettings)
+        await Future.delayed(Duration.zero);
+      });
+
+      testWidgets("Dark Theme Switch should be displayed", (
+        WidgetTester tester,
+      ) async {
+        await tester.pumpWidget(createSettingsScreen(viewModel));
+        await tester.pumpAndSettle();
+
+        //Expect dalam page ada widget switch milik setting Dark Theme
+        final darkThemeSwitch = find.byKey(Key("daily_reminder_switch"));
+        expect(
+          darkThemeSwitch,
+          findsOneWidget,
+          reason: "daily_reminder_switch Settings should be displayed",
+        );
+      });
+      testWidgets('should be displayed and OFF by default', (tester) async {
+        await tester.pumpWidget(createSettingsScreen(viewModel));
+        await tester.pumpAndSettle();
+
+        final reminderSwitchFinder = find.byKey(
+          const Key("daily_reminder_switch"),
+        );
+        expect(reminderSwitchFinder, findsOneWidget);
+
+        final switchWidget = tester.widget<Switch>(reminderSwitchFinder);
+        expect(switchWidget.value, isFalse);
+      });
+
+      testWidgets('should call toggleDailyReminder and turn ON when tapped', (
+        tester,
+      ) async {
+        await tester.pumpWidget(createSettingsScreen(viewModel));
+        await tester.pumpAndSettle();
+
+        mockNotificationServices.permissionsGrantedResult = true;
+
+        final reminderSwitchFinder = find.byKey(
+          const Key("daily_reminder_switch"),
+        );
+
+        await tester.tap(reminderSwitchFinder);
+        await tester.pumpAndSettle();
+
+        final switchWidget = tester.widget<Switch>(reminderSwitchFinder);
+        expect(switchWidget.value, isTrue);
+
+        // Verifikasi bahwa metode di service notifikasi dipanggil
+        expect(mockNotificationServices.scheduleCallCount, 1);
       });
     });
   });

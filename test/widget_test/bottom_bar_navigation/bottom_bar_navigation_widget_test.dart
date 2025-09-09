@@ -5,7 +5,6 @@ import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/repositories/favorite_repository.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
-import 'package:restaurant_flutter/model/services/setting_services.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_items_list.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
 import 'package:restaurant_flutter/viewModel/bottom_nav_view_model.dart';
@@ -111,19 +110,10 @@ class FakeSettingsViewModel extends ChangeNotifier
     "Buat Error Saja Agar Loading Indicator berhenti dan pumpAndSettle tidak timeout",
   );
 
+  // memenuhi kontrak interface tanpa harus mengimplementasikan setiap metode yang tidak kita butuhkan.
   @override
-  Future<void> toggleDarkMode(bool value) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> toggleDailyReminder(bool value) {
-    throw UnimplementedError();
-  }
-
-  @override
-  void updateServices(SettingsService newService) {
-    throw UnimplementedError();
+  dynamic noSuchMethod(Invocation invocation) {
+    return super.noSuchMethod(invocation);
   }
 }
 

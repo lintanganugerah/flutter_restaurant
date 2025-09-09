@@ -1,20 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:restaurant_flutter/model/services/setting_services.dart';
-import 'package:restaurant_flutter/model/setting.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../mock_function.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   SharedPreferences.setMockInitialValues({});
 
-  group("Settings Services Test", () {
+  group("Settings Services Test (SharedPreferences Logic)", () {
     test('loadSettings returns default when prefs empty', () async {
       final prefs = await SharedPreferences.getInstance();
       final service = SettingsService(prefs);
 
       final setting = await service.loadSettings();
       expect(setting.isDarkMode, false); // default
+      expect(setting.isDailyReminderActive, false);
     });
 
     test(
@@ -28,62 +30,101 @@ void main() {
         expect(setting.isDarkMode, true);
       },
     );
-  });
 
-  group("Setting ViewModel test", () {
     test(
-      "Initial load success are returning state loaded and value correctly",
+      'saveDailyReminder should save value dan loadSettings return correct value',
       () async {
         final prefs = await SharedPreferences.getInstance();
-        final service = MockSettingsServices(prefs);
-        final vm = SettingsViewModel(service);
+        final service = SettingsService(prefs);
 
-        await Future.delayed(Duration.zero); // tunggu async di constructor
+        await service.saveDailyReminder(true);
+        final setting = await service.loadSettings();
 
-        expect(vm.state, isA<SettingsStateLoaded>());
-        final loaded = vm.state as SettingsStateLoaded;
-        expect(loaded.setting.isDarkMode, false);
+        expect(setting.isDailyReminderActive, true);
+      },
+    );
+  });
+
+  group('SettingsViewModel (Provider & Notification Logic)', () {
+    late SettingsViewModel viewModel;
+    late MockSettingsService mockSettingsService;
+    late MockLocalNotificationServices mockNotificationServices;
+
+    setUp(() {
+      // Inisialisasi ulang semua komponen sebelum setiap tes
+      // untuk memastikan tes berjalan secara independen (tidak ada state bocor).
+      mockSettingsService = MockSettingsService();
+      mockNotificationServices = MockLocalNotificationServices();
+      viewModel = SettingsViewModel(
+        mockSettingsService,
+        mockNotificationServices,
+      );
+    });
+
+    test(
+      'State awal harus SettingsStateLoaded dengan nilai default setelah inisialisasi',
+      () async {
+        // Jeda agar Future loadSettingsdi dalam constructor selesai.
+        await Future.delayed(Duration.zero);
+
+        // Assert
+        expect(viewModel.state, isA<SettingsStateLoaded>());
+        final state = viewModel.state as SettingsStateLoaded;
+        expect(state.setting.isDarkMode, isFalse);
+        expect(state.setting.isDailyReminderActive, isFalse);
       },
     );
 
-    test('Initial load failure are returning state Error', () async {
-      final prefs = await SharedPreferences.getInstance();
-      final service = MockSettingsServiceFailure(prefs);
-      final vm = SettingsViewModel(service);
+    test(
+      'toggleDailyReminder (ON) harus menjadwalkan notifikasi jika izin diberikan',
+      () async {
+        // Atur agar mock notifikasi "mengizinkan" permission
+        mockNotificationServices.permissionsGrantedResult = true;
+        await Future.delayed(Duration.zero); // Pastikan state awal sudah Loaded
 
+        await viewModel.toggleDailyReminder(value: true, hour: 11, minute: 0);
+
+        // Pastikan service notifikasi dipanggil dengan benar
+        expect(mockNotificationServices.requestPermissionsCallCount, 1);
+        expect(mockNotificationServices.scheduleCallCount, 1);
+
+        final state = viewModel.state as SettingsStateLoaded;
+        expect(state.setting.isDailyReminderActive, isTrue);
+      },
+    );
+
+    test(
+      'toggleDailyReminder (ON) TIDAK boleh menjadwalkan notifikasi jika izin ditolak',
+      () async {
+        // Atur agar mock notifikasi "menolak" permission
+        mockNotificationServices.permissionsGrantedResult = false;
+        await Future.delayed(Duration.zero);
+
+        await viewModel.toggleDailyReminder(value: true, hour: 11, minute: 0);
+
+        // Pastikan service notifikasi TIDAK menjadwalkan apa pun
+        expect(mockNotificationServices.requestPermissionsCallCount, 1);
+        expect(mockNotificationServices.scheduleCallCount, 0);
+
+        // Pastikan state di ViewModel dikembalikan ke false
+        final state = viewModel.state as SettingsStateLoaded;
+        expect(state.setting.isDailyReminderActive, isFalse);
+      },
+    );
+
+    test('toggleDailyReminder (OFF) harus membatalkan notifikasi', () async {
+      // Jeda agar Future loadSettingsdi dalam constructor selesai.
       await Future.delayed(Duration.zero);
 
-      expect(vm.state, isA<SettingsStateError>());
-      final error = vm.state as SettingsStateError;
+      await viewModel.toggleDailyReminder(value: false, hour: 11, minute: 0);
 
-      //Expect ViewModel mengembalikan pesan error
-      expect(error.message, "Gagal memuat settings.");
+      expect(mockNotificationServices.cancelCallCount, 1);
+
+      expect(mockNotificationServices.requestPermissionsCallCount, 0);
+      expect(mockNotificationServices.scheduleCallCount, 0);
+
+      final state = viewModel.state as SettingsStateLoaded;
+      expect(state.setting.isDailyReminderActive, isFalse);
     });
   });
-}
-
-//Kita mock service untuk unit test view model
-//Butuh mock services dikarenakan kita hanya ingin test view model
-//Jika integration test maka kita tidak butuh mock services
-class MockSettingsServices extends SettingsService {
-  Setting _setting = Setting(isDarkMode: false);
-
-  MockSettingsServices(super._pref);
-
-  @override
-  Future<Setting> loadSettings() async => _setting;
-
-  @override
-  Future<void> saveDarkMode(bool isDarkMode) async {
-    _setting = _setting.copyWith(isDarkMode: isDarkMode);
-  }
-}
-
-class MockSettingsServiceFailure extends MockSettingsServices {
-  MockSettingsServiceFailure(super._pref);
-
-  @override
-  Future<Setting> loadSettings() async {
-    throw Exception();
-  }
 }

@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:restaurant_flutter/model/database/database_helper.dart';
 import 'package:restaurant_flutter/model/repositories/favorite_repository.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
-import 'package:sqflite_common/sqlite_api.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class FakeDatabaseHelper implements DatabaseHelper {
   //Fake in memory database
