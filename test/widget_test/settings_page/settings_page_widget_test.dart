@@ -112,9 +112,9 @@ void main() {
         // Lakukan Tap Switch untuk mengubah theme
         final darkThemeSwitchFinder = find.byKey(Key("dark_theme_switch"));
         await tester.tap(darkThemeSwitchFinder);
-        await tester.pumpAndSettle(); // Biarkan UI merespons perubahan state
+        await tester.pumpAndSettle();
 
-        // Cek bahwa tema di MaterialApp telah berubah menjadi gelap
+        // Cek bahwa tema di MaterialApp telah menjadi dark
         materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
         expect(
           materialApp.themeMode,

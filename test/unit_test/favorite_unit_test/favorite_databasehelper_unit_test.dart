@@ -41,7 +41,7 @@ void main() {
       expect(result.first.name, tRestaurant1.name);
     });
 
-    // Skenario 2: Mengambil semua data
+    // Mengambil semua data
     test('should return all favorite restaurants from the database', () async {
       final dbHelper = DatabaseHelper();
 

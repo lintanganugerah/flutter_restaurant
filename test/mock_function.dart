@@ -1,6 +1,8 @@
 import 'package:restaurant_flutter/model/services/local_notification_services.dart';
+import 'package:restaurant_flutter/model/services/restaurant_services.dart';
 import 'package:restaurant_flutter/model/services/setting_services.dart';
 import 'package:restaurant_flutter/model/setting.dart';
+import 'package:restaurant_flutter/model/restaurant.dart';
 
 /// Mock untuk SettingsService yang berinteraksi dengan SharedPreferences ke sebuah objek di memori
 class MockSettingsService implements SettingsService {
@@ -32,7 +34,6 @@ class MockSettingsService implements SettingsService {
 }
 
 /// Mock LocalNotificationServices.
-/// Memungkinkan kita mengontrol dan melacak interaksi notifikasi.
 class MockLocalNotificationServices implements LocalNotificationServices {
   // Properti untuk melacak panggilan metode
   int scheduleCallCount = 0;
@@ -65,5 +66,45 @@ class MockLocalNotificationServices implements LocalNotificationServices {
   @override
   dynamic noSuchMethod(Invocation invocation) {
     return super.noSuchMethod(invocation);
+  }
+}
+
+/// Mock Restaurant Services untuk mengontrol outputnya untuk setiap skenario tes.
+class MockRestaurantServices implements RestaurantServices {
+  // Properti untuk menyimpan data palsu yang akan dikembalikan
+  RestaurantListResponse? listResponseToReturn;
+  RestaurantDetailResponse? detailResponseToReturn;
+  RestaurantSearchResponse? searchResponseToReturn;
+
+  // Properti untuk menyimulasikan error
+  Exception? exceptionToThrow;
+
+  // Properti untuk melacak panggilan method
+  int getListRestaurantsCallCount = 0;
+  int getDetailRestaurantCallCount = 0;
+  int searchRestaurantsCallCount = 0;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {}
+
+  @override
+  Future<RestaurantListResponse> getListRestaurants() async {
+    getListRestaurantsCallCount++;
+    if (exceptionToThrow != null) throw exceptionToThrow!;
+    return listResponseToReturn!;
+  }
+
+  @override
+  Future<RestaurantDetailResponse> getDetailRestaurant(String id) async {
+    getDetailRestaurantCallCount++;
+    if (exceptionToThrow != null) throw exceptionToThrow!;
+    return detailResponseToReturn!;
+  }
+
+  @override
+  Future<RestaurantSearchResponse> searchRestaurants(String query) async {
+    searchRestaurantsCallCount++;
+    if (exceptionToThrow != null) throw exceptionToThrow!;
+    return searchResponseToReturn!;
   }
 }

@@ -26,7 +26,6 @@ List<SingleChildWidget> createAppProviderList() {
       create: (_) => LocalNotificationServices()..init(),
     ),
 
-    // =======================================================================
     // SERVICES, ADAPTERS & REPOSITORIES
     // Bergantung pada dependensi dasar
     ProxyProvider<http.Client, INetworkClient>(
@@ -77,6 +76,5 @@ List<SingleChildWidget> createAppProviderList() {
       update: (context, repository, previousViewModel) =>
           previousViewModel!..updateRepository(repository),
     ),
-    ChangeNotifierProvider(create: (context) => FavoriteViewModel()),
   ];
 }
