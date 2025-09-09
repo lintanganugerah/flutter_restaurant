@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:restaurant_flutter/model/database/database_helper.dart';
+import 'package:restaurant_flutter/model/repositories/favorite_repository.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/viewModel/favorite_view_model.dart';
 
@@ -20,36 +22,63 @@ final restaurant2 = Restaurant(
   rating: 4,
 );
 
+class FakeFavoriteRepository implements FavoriteRepository {
+  final List<Restaurant> fakeFavorites = [];
+
+  @override
+  Future<List<Restaurant>> getFavorites() async {
+    return Future.value(fakeFavorites);
+  }
+
+  @override
+  Future<void> addFavorite(Restaurant restaurant) async {
+    fakeFavorites.removeWhere((item) => item.id == restaurant.id);
+    fakeFavorites.add(restaurant);
+  }
+
+  @override
+  Future<void> removeFavorite(String id) async {
+    fakeFavorites.removeWhere((item) => item.id == id);
+  }
+
+  @override
+  DatabaseHelper get databaseHelper => throw UnimplementedError();
+}
+
 void main() {
   group("Favorite View Model", () {
     late FavoriteViewModel viewModel;
     // Ini memastikan setiap test dimulai dengan kondisi yang bersih dengan instance baru.
     setUp(() {
-      viewModel = FavoriteViewModel();
+      viewModel = FavoriteViewModel(
+        favoriteRepository: FakeFavoriteRepository(),
+      );
     });
 
     test(
       'should add a restaurant to favorites when toggleFavorite is called',
       () {
         viewModel.toggleFavorite(restaurant1);
+        final state = viewModel.state as FavoriteLoaded;
 
         // Cek apakah list favorites sekarang berisi restaurant1.
-        expect(viewModel.favorites.contains(restaurant1), isTrue);
-        expect(viewModel.favorites.length, 1);
+        expect(state.restaurants.contains(restaurant1), isTrue);
+        expect(state.restaurants.length, 1);
       },
     );
 
     test('should remove a restaurant from favorites if it already exists', () {
       // Tambahkan restaurant1 terlebih dahulu dan cek apakah ada
       viewModel.toggleFavorite(restaurant1);
-      expect(viewModel.favorites.contains(restaurant1), isTrue);
+      final state = viewModel.state as FavoriteLoaded;
+      expect(state.restaurants.contains(restaurant1), isTrue);
 
       // Panggil lagi toggleFavorite untuk restaurant yang sama untuk menghapusnya.
       viewModel.toggleFavorite(restaurant1);
 
       // Cek apakah list favorites sekarang sudah tidak menyimpan restaurant1.
-      expect(viewModel.favorites.contains(restaurant1), isFalse);
-      expect(viewModel.favorites.isEmpty, isTrue);
+      expect(state.restaurants.contains(restaurant1), isFalse);
+      expect(state.restaurants.isEmpty, isTrue);
     });
 
     test('isFavorite should return true for a favorite restaurant', () {

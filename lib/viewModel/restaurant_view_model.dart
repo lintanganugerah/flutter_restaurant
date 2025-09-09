@@ -5,9 +5,9 @@ import 'package:restaurant_flutter/model/services/restaurant_services.dart';
 import 'package:restaurant_flutter/model/utils/error_message.dart';
 
 class RestaurantViewModel extends ChangeNotifier {
-  final RestaurantServices client;
+  RestaurantServices _services;
 
-  RestaurantViewModel(this.client);
+  RestaurantViewModel(this._services);
 
   //State or Result Restaurant List
   RestaurantListData _resultRestaurantList = RestaurantListDataNothing();
@@ -29,7 +29,7 @@ class RestaurantViewModel extends ChangeNotifier {
     if (_resultRestaurantList is RestaurantListDataLoaded) return;
     _emitList(RestaurantListDataLoading());
     try {
-      final data = await client.getListRestaurants();
+      final data = await _services.getListRestaurants();
       _emitList(RestaurantListDataLoaded(data.restaurants));
     } catch (e) {
       _emitList(RestaurantListDataError(errorMessage(e)));
@@ -39,7 +39,7 @@ class RestaurantViewModel extends ChangeNotifier {
   void getDetailRestaurant(String id) async {
     _emitDetail(RestaurantDetailDataLoading());
     try {
-      final data = await client.getDetailRestaurant(id);
+      final data = await _services.getDetailRestaurant(id);
       _emitDetail(RestaurantDetailDataLoaded(data.restaurant));
     } catch (e) {
       _emitDetail(RestaurantDetailDataError(errorMessage(e)));
@@ -49,7 +49,7 @@ class RestaurantViewModel extends ChangeNotifier {
   void searchRestaurant(String query) async {
     _emitSearch(RestaurantSearchDataLoading());
     try {
-      final data = await client.searchRestaurants(query);
+      final data = await _services.searchRestaurants(query);
       _emitSearch(RestaurantSearchDataLoaded(data.restaurants));
     } catch (e) {
       _emitSearch(RestaurantSearchDataError(errorMessage(e)));
@@ -105,6 +105,13 @@ class RestaurantViewModel extends ChangeNotifier {
 
   void cleanSearchRestaurantData() {
     _resultRestaurantSearch = RestaurantSearchDataNothing();
+  }
+
+  //Memperbaiki fungsi update pada provider agar tidak membuang data lama
+  //Sebelumnya terdapat bug pada homescreen ketika hotrestart/hotreload data akan kosong...
+  //..karena provider membuang data lama dan tidak menyimpan data baru
+  void updateServices(RestaurantServices newServices) {
+    _services = newServices;
   }
 }
 
