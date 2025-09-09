@@ -7,6 +7,7 @@ class SettingsService {
   SettingsService(this._pref);
 
   static const String _kDarkModeKey = 'isDarkMode';
+  static const String _kDailyReminderKey = 'dailyReminder';
 
   //Kita load berdasarkan dari shared Preferences
   Future<Setting> loadSettings() async {
@@ -14,6 +15,7 @@ class SettingsService {
       return Setting(
         isDarkMode:
             _pref.getBool(_kDarkModeKey) ?? false, // Default value false
+        isDailyReminderActive: _pref.getBool(_kDailyReminderKey) ?? false,
       );
     } catch (e) {
       throw Exception("Failed to load setting.");
@@ -26,6 +28,15 @@ class SettingsService {
       await _pref.setBool(_kDarkModeKey, isDarkMode);
     } catch (e) {
       throw Exception("Failed to save dark mode setting.");
+    }
+  }
+
+  //Save nilai settings daily reminder ke shared preferences
+  Future<void> saveDailyReminder(bool isActive) async {
+    try {
+      await _pref.setBool(_kDailyReminderKey, isActive);
+    } catch (e) {
+      throw Exception("Failed to save daily reminder setting.");
     }
   }
 }

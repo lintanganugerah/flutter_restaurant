@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_flutter/model/services/local_notification_services.dart';
 import 'package:restaurant_flutter/model/services/setting_services.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
 import 'package:restaurant_flutter/view/widgets/settings_card.dart';
@@ -11,7 +12,10 @@ Widget settingsPage(SharedPreferences pref) {
   return MultiProvider(
     providers: [
       ChangeNotifierProvider(
-        create: (context) => SettingsViewModel(SettingsService(pref)),
+        create: (context) => SettingsViewModel(
+          SettingsService(pref),
+          LocalNotificationServices(),
+        ),
       ),
     ],
     child: Consumer<SettingsViewModel>(

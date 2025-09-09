@@ -46,6 +46,33 @@ class SettingsPage extends StatelessWidget {
                   }
                 },
               ),
+              SizedBox(height: 16),
+              Consumer<SettingsViewModel>(
+                builder: (context, viewmodel, child) {
+                  switch (viewmodel.state) {
+                    case SettingsStateLoading():
+                      return Center(child: CircularProgressIndicator());
+
+                    case SettingsStateError(message: final message):
+                      return Center(child: TextBodySmall(text: message));
+
+                    case SettingsStateLoaded(setting: final setting):
+                      return SettingsCard(
+                        title: "Daily Reminder",
+                        description: "Show Notification Reminder Every 11AM",
+                        widget: Switch(
+                          value: setting.isDailyReminderActive,
+                          onChanged: (bool newVal) {
+                            context
+                                .read<SettingsViewModel>()
+                                .toggleDailyReminder(newVal);
+                          },
+                          key: Key("daily_reminder_switch"),
+                        ),
+                      );
+                  }
+                },
+              ),
             ],
           ),
         ),

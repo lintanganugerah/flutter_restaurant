@@ -3,7 +3,7 @@ import 'package:restaurant_flutter/model/repositories/favorite_repository.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 
 class FavoriteViewModel extends ChangeNotifier {
-  final FavoriteRepository _repository;
+  FavoriteRepository _repository;
 
   FavoriteState _state = FavoriteInitial();
 
@@ -55,6 +55,13 @@ class FavoriteViewModel extends ChangeNotifier {
   _emit(FavoriteState state) {
     _state = state;
     notifyListeners();
+  }
+
+  // Digunakan untuk memperbarui instance previousViewModel yang sudah ada
+  // bukan membuat yang baru pada ProxyProvider.
+  // Sehingga dapat mempertahankan viewModel lama yang sudah dibuat
+  void updateRepository(FavoriteRepository newRepository) {
+    _repository = newRepository;
   }
 }
 

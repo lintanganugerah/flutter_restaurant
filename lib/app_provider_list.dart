@@ -3,6 +3,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:restaurant_flutter/model/database/database_helper.dart';
 import 'package:restaurant_flutter/model/network/http_adapter.dart';
 import 'package:restaurant_flutter/model/repositories/favorite_repository.dart';
+import 'package:restaurant_flutter/model/services/local_notification_services.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
 import 'package:restaurant_flutter/model/services/review_services.dart';
 import 'package:restaurant_flutter/model/services/setting_services.dart';
@@ -21,6 +22,12 @@ List<SingleChildWidget> createAppProviderList() {
     // Menyediakan instance dasar yang tidak bergantung pada provider lain.
     Provider<http.Client>(create: (_) => http.Client()),
     Provider<DatabaseHelper>(create: (_) => DatabaseHelper()),
+    Provider<LocalNotificationServices>(
+      create: (_) => LocalNotificationServices(),
+    ),
+    Provider<LocalNotificationServices>(
+      create: (_) => LocalNotificationServices()..init(),
+    ),
 
     // =======================================================================
     // SERVICES, ADAPTERS & REPOSITORIES
@@ -56,19 +63,22 @@ List<SingleChildWidget> createAppProviderList() {
     ChangeNotifierProxyProvider<ReviewServices, ReviewViewModel>(
       create: (context) => ReviewViewModel(context.read<ReviewServices>()),
       update: (context, services, previousViewModel) =>
-          ReviewViewModel(services),
+          previousViewModel!..updateServices(services),
     ),
     ChangeNotifierProxyProvider<SettingsService, SettingsViewModel>(
-      create: (context) => SettingsViewModel(context.read<SettingsService>()),
+      create: (context) => SettingsViewModel(
+        context.read<SettingsService>(),
+        context.read<LocalNotificationServices>(),
+      ),
       update: (context, service, previousViewModel) =>
-          SettingsViewModel(service),
+          previousViewModel!..updateServices(service),
     ),
     ChangeNotifierProxyProvider<FavoriteRepository, FavoriteViewModel>(
       create: (context) => FavoriteViewModel(
         favoriteRepository: context.read<FavoriteRepository>(),
       ),
       update: (context, repository, previousViewModel) =>
-          FavoriteViewModel(favoriteRepository: repository),
+          previousViewModel!..updateRepository(repository),
     ),
     ChangeNotifierProvider(create: (context) => FavoriteViewModel()),
   ];

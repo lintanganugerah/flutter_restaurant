@@ -2,8 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
+import 'package:restaurant_flutter/model/repositories/favorite_repository.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/model/services/restaurant_services.dart';
+import 'package:restaurant_flutter/model/services/setting_services.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_items_list.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
 import 'package:restaurant_flutter/viewModel/bottom_nav_view_model.dart';
@@ -90,6 +92,11 @@ class FakeFavoriteViewModel extends ChangeNotifier
   Future<void> toggleFavorite(Restaurant restaurant) {
     throw UnimplementedError();
   }
+
+  @override
+  void updateRepository(FavoriteRepository newRepository) {
+    throw UnimplementedError();
+  }
 }
 
 class FakeSettingsViewModel extends ChangeNotifier
@@ -106,6 +113,16 @@ class FakeSettingsViewModel extends ChangeNotifier
 
   @override
   Future<void> toggleDarkMode(bool value) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> toggleDailyReminder(bool value) {
+    throw UnimplementedError();
+  }
+
+  @override
+  void updateServices(SettingsService newService) {
     throw UnimplementedError();
   }
 }
