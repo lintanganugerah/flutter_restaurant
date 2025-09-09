@@ -18,11 +18,6 @@ class SettingsViewModel extends ChangeNotifier {
     loadSettings();
   }
 
-  int _notificationId = 0;
-  bool? _permission = false;
-
-  bool? get permission => _permission;
-
   void _emit(SettingsState state) {
     _state = state;
     notifyListeners();

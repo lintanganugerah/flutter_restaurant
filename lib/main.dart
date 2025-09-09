@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_flutter/model/services/local_notification_services.dart';
 import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
 import 'package:restaurant_flutter/app_provider_list.dart';
 import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
