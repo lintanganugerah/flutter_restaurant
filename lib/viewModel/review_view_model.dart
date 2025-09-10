@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:restaurant_flutter/model/customer_review.dart';
 import 'package:restaurant_flutter/model/services/review_services.dart';
-import 'package:restaurant_flutter/utils/error_message.dart';
+import 'package:restaurant_flutter/model/utils/error_message.dart';
 
 class ReviewViewModel extends ChangeNotifier {
-  final ReviewServices client;
+  ReviewServices _service;
 
-  ReviewViewModel(this.client);
+  ReviewViewModel(this._service);
 
   //State or Result Review
   ResultReview _resultReview = ResultReviewNothing();
@@ -27,7 +27,7 @@ class ReviewViewModel extends ChangeNotifier {
       );
       final jsonPayload = reviewData.toJson();
 
-      final response = await client.postReviewRestaurant(jsonPayload);
+      final response = await _service.postReviewRestaurant(jsonPayload);
       _emit(ResultReviewLoaded(response.customerReviews));
     } catch (e) {
       _emit(ResultReviewError(errorMessage(e)));
@@ -37,6 +37,12 @@ class ReviewViewModel extends ChangeNotifier {
   void _emit(ResultReview state) {
     _resultReview = state;
     notifyListeners();
+  }
+
+  // Digunakan untuk memperbarui instance previousViewModel yang sudah ada
+  // bukan membuat yang baru pada ProxyProvider
+  void updateServices(ReviewServices newServices) {
+    _service = newServices;
   }
 }
 

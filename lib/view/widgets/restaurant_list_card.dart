@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
 import 'package:restaurant_flutter/view/detail_screen.dart';
-import 'package:restaurant_flutter/widgets/title_medium.dart';
+import 'package:restaurant_flutter/view/widgets/title_medium.dart';
 
 class RestaurantListCard extends StatelessWidget {
   const RestaurantListCard({super.key, required this.data});

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:restaurant_flutter/model/restaurant.dart';
-import 'package:restaurant_flutter/type/network_client.dart';
+import 'package:restaurant_flutter/model/type/network_client.dart';
 
 class RestaurantServices {
   final INetworkClient client;

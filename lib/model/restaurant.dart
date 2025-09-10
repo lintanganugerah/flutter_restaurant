@@ -51,6 +51,45 @@ class Restaurant {
             json["customerReviews"].map((x) => CustomerReview.fromJson(x)),
           ),
   );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "name": name,
+    "description": description,
+    "city": city,
+    "pictureId": pictureId,
+    "rating": rating,
+    "address": address,
+    "categories": categories == null
+        ? null
+        : List<dynamic>.from(categories!.map((x) => x.toJson())),
+    "menus": menu?.toJson(),
+    "customerReviews": customerReviews == null
+        ? null
+        : List<dynamic>.from(customerReviews!.map((x) => x.toJson())),
+  };
+
+  Map<String, dynamic> toSQLite() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'pictureId': pictureId,
+      'city': city,
+      'rating': rating,
+    };
+  }
+
+  /// hashCode-nya kita ubah berdasarkan id agar operator di bawah ini paham
+  @override
+  int get hashCode => id.hashCode;
+
+  /// Dengan kode ini, kita memberitahu Dart sebuah aturan baru:
+  /// Objek Restaurant dianggap sama berdasarkan properti 'id' bukan berdasarkan memori
+  @override
+  bool operator ==(Object other) {
+    return other is Restaurant && other.id == id;
+  }
 }
 
 class RestaurantListResponse {

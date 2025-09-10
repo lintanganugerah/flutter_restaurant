@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_flutter/viewModel/review_view_model.dart';
-import 'package:restaurant_flutter/widgets/title_medium.dart';
+import 'package:restaurant_flutter/view/widgets/title_medium.dart';
 
 class AddReviewScreen extends StatefulWidget {
   const AddReviewScreen({

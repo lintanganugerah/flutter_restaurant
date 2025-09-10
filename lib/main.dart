@@ -1,28 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:restaurant_flutter/model/network/http_adapter.dart';
-import 'package:restaurant_flutter/model/services/restaurant_services.dart';
-import 'package:restaurant_flutter/model/services/review_services.dart';
-import 'package:restaurant_flutter/type/network_client.dart';
-import 'package:restaurant_flutter/view/home_screen.dart';
-import 'package:restaurant_flutter/viewModel/restaurant_view_model.dart';
-import 'package:http/http.dart' as http;
-import 'package:restaurant_flutter/viewModel/review_view_model.dart';
+import 'package:restaurant_flutter/navigation/bottom_nav_screen.dart';
+import 'package:restaurant_flutter/app_provider_list.dart';
+import 'package:restaurant_flutter/viewModel/settings_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  final INetworkClient httpClient = HttpAdapter(http.Client());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) =>
-              RestaurantViewModel(RestaurantServices(client: httpClient)),
-        ),
-        ChangeNotifierProvider(
-          create: (context) =>
-              ReviewViewModel(ReviewServices(client: httpClient)),
-        ),
+        // Sediakan SharedPreferences melalui value agar bisa diakses oleh SettingsService melalui ProxyProvider.
+        Provider<SharedPreferences>.value(value: prefs),
+        ...createAppProviderList(),
       ],
       child: const MyApp(),
     ),
@@ -34,11 +26,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsViewModel = context.watch<SettingsViewModel>();
+    final state = settingsViewModel.state;
+    final isDarkMode = (state is SettingsStateLoaded)
+        ? state.setting.isDarkMode
+        : false;
     return MaterialApp(
       title: 'Restaurant API',
       theme: _buildTheme(),
       darkTheme: _buildTheme(Brightness.dark),
-      themeMode: ThemeMode.system,
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       //Settings supaya ukuran font tetap sama meskipun settings system berbeda
       builder: (BuildContext context, child) {
         final mediaQueryData = MediaQuery.of(context);
@@ -51,7 +48,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const Homescreen(),
+      home: const BottomNavigationScreen(),
     );
   }
 }

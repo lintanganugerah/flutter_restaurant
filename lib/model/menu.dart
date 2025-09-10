@@ -1,4 +1,4 @@
-import 'package:restaurant_flutter/type/menu_type.dart';
+import 'package:restaurant_flutter/model/type/menu_type.dart';
 
 class MenuItem {
   String name;
